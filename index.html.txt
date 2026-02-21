@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لحظة | وقف</title>
+<link rel="icon" href="https://fav.farm/❤️" />
+<style>
+@font-face {
+  font-family: 'ArabicThuluth';
+  src: url('https://cdn.jsdelivr.net/gh/alif-type/thuluth/Thuluth-Regular.ttf') format('truetype');
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #000000;
+  font-family: 'ArabicThuluth', serif;
+  color: white;
+  text-align: center;
+  overflow-x: hidden; /* منع التمايل الجانبي */
+  overflow-y: auto;   /* السماح بالتمرير إذا كان النص طويلاً */
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+}
+
+h1 {
+  font-size: clamp(3rem, 15vw, 6rem); 
+  color: #888888;
+  margin-bottom: 5vh;
+  text-shadow: 2px 2px 15px rgba(255,255,255,0.1);
+  width: 100%;
+}
+
+#options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+button.option-btn {
+  padding: 20px 40px;
+  width: 85%;
+  max-width: 400px;
+  font-size: clamp(1.2rem, 6vw, 2rem);
+  background-color: transparent;
+  color: #ff0000;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  font-family: 'ArabicThuluth', serif;
+}
+
+button.option-btn:active {
+  transform: scale(0.95);
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+#adviceBox {
+  font-size: clamp(1.1rem, 5vw, 1.8rem);
+  color: #00ffea;
+  max-width: 90%;
+  margin: 10vh auto 3vh auto;
+  line-height: 1.6;
+  text-shadow: 1px 1px 8px rgba(0, 255, 234, 0.2);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  white-space: pre-line;
+  display: none; /* مخفي في البداية */
+}
+
+#backBtn, #doneBtn {
+  padding: 15px 30px;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'ArabicThuluth', serif;
+  border: none;
+  background-color: transparent;
+  display: none;
+  transition: opacity 0.3s;
+}
+
+#backBtn {
+  color: #00bfff;
+  margin-top: 20px;
+}
+
+#doneBtn {
+  color: #ff0000;
+  margin-top: 30px;
+  border: 1px solid #ff0000;
+}
+
+/* تأثير حركة الزر المختار */
+.selected-btn {
+  position: fixed !important;
+  top: 5vh !important;
+  left: 50% !important;
+  transform: translateX(-50%) scale(1.1) !important;
+  border: none !important;
+  z-index: 100;
+}
+</style>
+</head>
+<body>
+
+<h1 id="mainTitle">وقف</h1>
+
+<div id="options">
+  <button class="option-btn" onclick="playOption(this,'angry')">معصب</button>
+  <button class="option-btn" onclick="playOption(this,'mistake')">بفكر أعمل غلطة</button>
+  <button class="option-btn" onclick="playOption(this,'sad')">مخنوق</button>
+</div>
+
+<div id="adviceBox"></div>
+<button id="doneBtn" onclick="finishAdvice()">إذا خلصت اضغط هنا</button>
+<button id="backBtn" onclick="goBack()">رجوع للقائمة</button>
+
+<script>
+const adviceBox = document.getElementById("adviceBox");
+const optionsDiv = document.getElementById("options");
+const backBtn = document.getElementById("backBtn");
+const doneBtn = document.getElementById("doneBtn");
+const mainTitle = document.getElementById("mainTitle");
+
+function playOption(btn, option){
+  // إخفاء العنوان وباقي الخيارات
+  mainTitle.style.display = "none";
+  const buttons = document.querySelectorAll(".option-btn");
+  buttons.forEach(b => { if(b !== btn) b.style.display = "none"; });
+
+  // تمييز الزر المختار
+  btn.classList.add("selected-btn");
+
+  let advice = '';
+  switch(option){
+    case 'angry':
+      advice = `اسمع، أنا وضعك هاد عارفه وحاسس فيه ومتأكد إنو معك الحق مليون بالمية تعمل كلشي فكرت فيه، بس أي تصرف بالوقت الحالي رح يخليك تندم كثير.\n\nفـ روّقققق وكل اشي بنحل وأنت رايق.`;
+      break;
+    case 'mistake':
+      advice = `شوف، أنا معك، والكل مرق ورح يمرق بشعورك.\nوبأكدلك وبوعدك: إذا عملت اللي براسك، رح تندم وتظل حاسس بتأنيب ضمير.\n\nأنا هون عشان أخليك تكون أقوى. فكر بالموضوع أكثر.. وإذا بتحب، اكتب شو كنت رح تعمل على ورقة، وارجع لها كمان نص ساعة وشوف كيف رح تشكرني.`;
+      break;
+    case 'sad':
+      advice = `شوف، كلنا عندنا ظروف ومواقف ما بتنتسى، والأغلبية أصلاً مستحيل ينسى.\nوممكن كمان تكون خنقتك بسبب خوف أو مرض، بس أنا بدي أحكيلك كم كلمة:\n\n"عمرها خنقتك ما بتوصلك لنتيجة".\nكل شي بدو مواجهة، إذا ما واجهت طول عمرك رح تضل مخنوق. استعن بالله وقوّي قلبك.`;
+      break;
+  }
+
+  setTimeout(() => {
+    adviceBox.style.display = "block";
+    setTimeout(() => {
+      adviceBox.innerText = advice;
+      adviceBox.style.opacity = 1;
+      doneBtn.style.display = "inline-block";
+      backBtn.style.display = "inline-block";
+    }, 100);
+  }, 300);
+}
+
+function finishAdvice(){
+  adviceBox.style.opacity = 0;
+  setTimeout(() => {
+    adviceBox.innerText = `خذ نفس عميق وارتاح.. وارجعلي بأي وقت ❤️`;
+    adviceBox.style.opacity = 1;
+    doneBtn.style.display = "none";
+  }, 400);
+}
+
+function goBack(){
+  // إعادة كل شيء لأصله
+  adviceBox.style.opacity = 0;
+  adviceBox.style.display = "none";
+  doneBtn.style.display = "none";
+  backBtn.style.display = "none";
+  mainTitle.style.display = "block";
+  
+  optionsDiv.style.display = "flex";
+  const buttons = document.querySelectorAll(".option-btn");
+  buttons.forEach(btn => {
+    btn.style.display = "block";
+    btn.classList.remove("selected-btn");
+  });
+}
+</script>
+
+</body>
+</html>
